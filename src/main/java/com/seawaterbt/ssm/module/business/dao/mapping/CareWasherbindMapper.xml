@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareWasherbindMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareWasherbind">
+        <id column="ID" property="id" />
+        <result column="wechatID" property="wechatID" />
+        <result column="washerSN" property="washerSN" />
+        <result column="washerName" property="washerName" />
+        <result column="bindTime" property="bindTime" />
+        <result column="corp_id" property="corpId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, wechatID, washerSN, washerName, bindTime, corp_id
+    </sql>
+
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareWasherusermonthcardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareWasherusermonthcard">
+        <id column="ID" property="id"/>
+        <result column="wechatID" property="wechatID"/>
+        <result column="bgnDate" property="bgnDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, wechatID, bgnDate, endDate, created_at, updated_at
+    </sql>
+    <select id="selectWasherusermonthcard"
+            resultType="map">
+        select
+        card.ID as id,card.wechatID, card.bgnDate, card.endDate, card.created_at as createdAt, card.updated_at as updatedAt,
+        users.headimgurl
+        from care_WasherUserMonthCard card
+        left join care_wechat_users users on users.openid = card.wechatID
+        <where>
+            <if test="params.wechatID != null and params.wechatID != ''">
+                and wechatID = #{params.wechatID}
+            </if>
+        </where>
+        order by card.created_at desc
+    </select>
+
+</mapper>

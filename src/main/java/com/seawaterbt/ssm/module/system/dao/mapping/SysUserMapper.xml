@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.system.dao.SysUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.system.entity.SysUser">
+        <id column="id" property="id"/>
+        <result column="avatar" property="avatar"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        avatar, account, password, salt, name, sex, email, phone, status, create_time, update_time, id
+    </sql>
+    <select id="selectUserPageList" resultType="java.util.Map" parameterType="java.util.Map">
+        select
+        u.id,u.account,u.name,u.status,u.create_time as createTime,
+        r.id as roleId,
+        r.name AS roleName
+        from
+        t_sys_user u
+        left join t_sys_user_role ur ON u.id = ur.user_id
+        left join t_sys_role r ON ur.role_id = r.id
+        <where>
+            <if test="params.account != null and params.account != ''">
+                and u.account = #{params.account}
+            </if>
+            <if test="params.name != null and params.name != ''">
+                and u.name = #{params.name}
+            </if>
+        </where>
+        order by u.id desc
+    </select>
+
+</mapper>

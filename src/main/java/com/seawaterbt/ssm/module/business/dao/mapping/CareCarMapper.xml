@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareCarMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareCar">
+        <id column="id" property="id"/>
+        <result column="simnum" property="simnum"/>
+        <result column="sn" property="sn"/>
+        <result column="imsi" property="imsi"/>
+        <result column="carnum" property="carnum"/>
+        <result column="area_id" property="areaId"/>
+        <result column="term_id" property="termId"/>
+        <result column="type_id" property="typeId"/>
+        <result column="ownername" property="ownername"/>
+        <result column="ownertele" property="ownertele"/>
+        <result column="svrstarttime" property="svrstarttime"/>
+        <result column="svrendtime" property="svrendtime"/>
+        <result column="icon" property="icon"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="iccid" property="iccid"/>
+        <result column="SWVersion" property="sWVersion"/>
+        <result column="operator" property="operator"/>
+        <result column="sid" property="sid"/>
+        <result column="lastpaytime" property="lastpaytime"/>
+        <result column="protocol" property="protocol"/>
+        <result column="termtype" property="termtype"/>
+        <result column="mac" property="mac"/>
+        <result column="comm_sket" property="commSket"/>
+        <result column="lastordercode" property="lastordercode"/>
+        <result column="primary_key" property="primaryKey"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                id, simnum, sn, imsi, carnum, area_id, term_id, type_id, ownername, ownertele, svrstarttime, svrendtime,
+                icon, created_at, updated_at, iccid, SWVersion, operator, sid, lastpaytime, protocol, termtype, mac,
+                comm_sket, lastordercode, primary_key
+    </sql>
+    <select id="selectCareCarList" resultType="map">
+        select
+        id,sn,primary_key as primaryKey,protocol, termtype, mac,created_at as createdAt
+        from care_car
+        <where>
+            <if test="params.sn != null">
+                and sn LIKE CONCAT('%',#{params.sn},'%')
+            </if>
+            <if test="params.iccid != null">
+                and iccid = #{params.iccid}
+            </if>
+        </where>
+        order by created_at desc
+    </select>
+    <select id="selectCareCarSnList" resultType="string">
+        select
+        sn
+        from care_car
+        <where>
+            sn in
+            <foreach collection="list" open="(" close=")" separator=","
+                     item="id" index="i">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+</mapper>

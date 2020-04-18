@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareWechatUsersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareWechatUsers">
+        <id column="id" property="id"/>
+        <result column="appid" property="appid"/>
+        <result column="openid" property="openid"/>
+        <result column="unionid" property="unionid"/>
+        <result column="name" property="name"/>
+        <result column="nickname" property="nickname"/>
+        <result column="sex" property="sex"/>
+        <result column="language" property="language"/>
+        <result column="city" property="city"/>
+        <result column="province" property="province"/>
+        <result column="country" property="country"/>
+        <result column="headimgurl" property="headimgurl"/>
+        <result column="subscribe" property="subscribe"/>
+        <result column="subscribe_time" property="subscribeTime"/>
+        <result column="remark" property="remark"/>
+        <result column="groupid" property="groupid"/>
+        <result column="type" property="type"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, appid, openid, unionid, name, nickname, sex, language, city, province, country, headimgurl, subscribe, subscribe_time, remark, groupid, type, created_at, updated_at
+    </sql>
+    <sql id="WechatUserList_Column_List">
+        cwu.id,cwu.openid,cwu.unionid,cwu.name,cwu.nickname,cwu.sex,cwu.city,cwu.province,cwu.country,cwu.headimgurl,cwu.subscribe,cwu.subscribe_time as subscribeTime,cwu.created_at as createdAt,cwu.updated_at as updatedAt,
+        cwup.phone
+    </sql>
+    <select id="selectWechatUserList" resultType="java.util.Map">
+        select
+        <include refid="WechatUserList_Column_List"/>
+        from care_wechat_users cwu
+        left join care_wechat_users_phone cwup on cwu.openid = cwup.openid
+        <where>
+            <if test="params.openid != null and params.openid != ''">
+                and cwu.openid = #{params.openid}
+            </if>
+            <if test="params.unionid != null and params.unionid != ''">
+                and cwu.unionid = #{params.unionid}
+            </if>
+            <if test="params.nickname != null and params.nickname != ''">
+                and cwu.nickname = #{params.nickname}
+            </if>
+            <if test="params.phone != null and params.phone != ''">
+                and cwup.phone = #{params.phone}
+            </if>
+        </where>
+        order by cwu.subscribe_time desc
+    </select>
+
+</mapper>

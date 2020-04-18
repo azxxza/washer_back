@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareConsumePrestatisticsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareConsumePrestatistics">
+        <result column="school" property="school"/>
+        <result column="floor" property="floor"/>
+        <result column="termCount" property="termCount"/>
+        <result column="DCRenewMoney" property="DCRenewMoney"/>
+        <result column="DCRenewCount" property="DCRenewCount"/>
+        <result column="BYRenewMoney" property="BYRenewMoney"/>
+        <result column="BYRenewCount" property="BYRenewCount"/>
+        <result column="deposit" property="deposit"/>
+        <result column="opttime" property="opttime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                school, floor, termCount, DCRenewMoney, DCRenewCount, BYRenewMoney, BYRenewCount, deposit, opttime
+    </sql>
+
+    <sql id="Profit_Column_List">
+        StatDate as statDate,
+               termCount,
+               DCRenewMoney as dcRenewMoney,
+               DCRenewCount as dcRenewCount,
+               BYRenewMoney as byRenewMoney,
+               BYRenewCount as byRenewCount,
+               TotalProfit  as totalProfit
+    </sql>
+
+
+    <select id="selectProfitList" resultType="java.util.Map">
+        SELECT CONVERT(VARCHAR(${params.length}), Opttime, 20)                         as statDate,
+               SUM(CASE costtype WHEN 3 THEN CONVERT(DECIMAL(10, 2), cost) ELSE 0 END) AS dcRenewMoney,
+               SUM(CASE costtype WHEN 3 THEN 1 ELSE 0 END)                             AS dcRenewCount,
+               SUM(CASE costtype
+                       WHEN 1 THEN CONVERT(DECIMAL(10, 2), cost)
+                       WHEN 2 THEN CONVERT(DECIMAL(10, 2), cost)
+                       WHEN 10 THEN CONVERT(DECIMAL(10, 2), cost)
+                       WHEN 20 THEN CONVERT(DECIMAL(10, 2), cost)
+                       WHEN 30 THEN CONVERT(DECIMAL(10, 2), cost)
+                       WHEN 40 THEN CONVERT(DECIMAL(10, 2), cost)
+                       ELSE 0 END)                                                     AS byRenewMoney,
+               SUM(CASE costtype
+                       WHEN 1 THEN 1
+                       WHEN 2 THEN 1
+                       WHEN 10 THEN 1
+                       WHEN 20 THEN 1
+                       WHEN 30 THEN 1
+                       WHEN 40 THEN 1
+                       ELSE 0 END)                                                     AS byRenewCount,
+               SUM(CONVERT(DECIMAL(10, 2), cost))                                      as totalProfit
+        FROM care_WasherPrePayInfo
+        WHERE OrderStatus = 1
+          AND CONVERT(DECIMAL(10, 2), cost) > 0
+        <if test="params.statDate != null and params.statDate != ''">
+            and CONVERT(VARCHAR(${params.length}), Opttime, 20) = #{params.statDate}
+        </if>
+        GROUP BY CONVERT(
+                     VARCHAR(${params.length}),
+                         Opttime,
+                         20)
+        order by CONVERT(VARCHAR(${params.length}), Opttime, 20) desc
+    </select>
+</mapper>

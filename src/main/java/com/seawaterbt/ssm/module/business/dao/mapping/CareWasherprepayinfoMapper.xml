@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareWasherprepayinfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareWasherprepayinfo">
+        <id column="ID" property="id"/>
+        <result column="WeChat" property="weChat"/>
+        <result column="washerSN" property="washerSN"/>
+        <result column="washerModel" property="washerModel"/>
+        <result column="RenewMoney" property="renewMoney"/>
+        <result column="OrderCode" property="orderCode"/>
+        <result column="OrderStatus" property="orderStatus"/>
+        <result column="Opttime" property="opttime"/>
+        <result column="costtype" property="costtype"/>
+        <result column="costid" property="costid"/>
+        <result column="discount" property="discount"/>
+        <result column="deposit" property="deposit"/>
+        <result column="cost" property="cost"/>
+        <result column="usertype" property="usertype"/>
+        <result column="paytype" property="paytype"/>
+        <result column="waterLevel" property="waterLevel"/>
+        <result column="paymodel" property="paymodel"/>
+        <result column="wallet_fee" property="walletFee"/>
+        <result column="wallet_give" property="walletGive"/>
+        <result column="Price" property="price"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                ID, WeChat, washerSN, washerModel, RenewMoney, OrderCode, OrderStatus, Opttime, costtype, costid,
+                discount, deposit, cost, usertype, paytype, waterLevel, paymodel, wallet_fee, wallet_give, Price
+    </sql>
+
+    <select id="selectOrderList" resultType="map">
+        select info.WeChat as weChat,
+        info.washerSN,
+        info.washerModel,
+        info.RenewMoney as renewMoney,
+        info.OrderCode as orderCode,
+        info.Opttime as opttime,
+        info.costtype as costtype,
+        info.costid as costid,
+        info.OrderStatus as orderStatus,
+        info.waterLevel,
+        info.paymodel,
+        info.paytype,
+        users.nickname,
+        phone.phone as telephone,
+        install.province,
+        install.school,
+        install.floor,
+        install.dormitory,
+        type.costtypename
+        from care_WasherPrePayInfo info
+        left join care_costmodel model on info.costid = model.id
+        left join care_costtype type on info.costtype = type.id
+        left join care_wechat_users users on info.WeChat = users.openid
+        left join care_wechat_users_phone phone on users.openid = phone.openid
+        left join care_install install on info.washerSN = install.sn
+        <where>
+            <if test="params.washerSN != null and params.washerSN != ''">
+                and info.washerSN = #{params.washerSN}
+            </if>
+            <if test="params.openid != null and params.openid != ''">
+                and info.WeChat = #{params.openid}
+            </if>
+            <if test="params.school != null and params.school != ''">
+                and install.school = #{params.school}
+            </if>
+            <if test="params.floor != null and params.floor != ''">
+                and install.floor = #{params.floor}
+            </if>
+            <if test="params.renewMoney != null">
+                and info.RenewMoney = #{params.renewMoney}
+            </if>
+            <if test="params.begTime != null">
+                and info.Opttime >= #{params.begTime}
+            </if>
+            <if test="params.endTime != null">
+                and #{params.endTime} > info.Opttime
+            </if>
+        </where>
+        order by info.Opttime desc
+
+    </select>
+
+</mapper>

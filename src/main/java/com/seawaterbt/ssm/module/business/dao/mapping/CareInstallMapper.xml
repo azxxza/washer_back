@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareInstallMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareInstall">
+        <id column="id" property="id"/>
+        <result column="agent_no" property="agentNo"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="school" property="school"/>
+        <result column="floor" property="floor"/>
+        <result column="dormitory" property="dormitory"/>
+        <result column="sn" property="sn"/>
+        <result column="sid" property="sid"/>
+        <result column="operator" property="operator"/>
+        <result column="remark" property="remark"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                id, agent_no, province, city, school, floor, dormitory, sn, sid, operator, remark, created_at,
+                updated_at
+    </sql>
+
+    <select id="selectCareInstallList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from care_install
+        <where>
+            <if test="params.agentNo != null and params.agentNo != ''">
+                and agent_no = #{params.agentNo}
+            </if>
+            <if test="params.province != null and params.province != ''">
+                and province LIKE CONCAT('%',#{params.province},'%')
+            </if>
+            <if test="params.city != null and params.city != ''">
+                and city LIKE CONCAT('%',#{params.city},'%')
+            </if>
+            <if test="params.school != null and params.school != ''">
+                and school LIKE CONCAT('%',#{params.school},'%')
+            </if>
+            <if test="params.floor != null and params.floor != ''">
+                and floor LIKE CONCAT('%',#{params.floor},'%')
+            </if>
+            <if test="params.dormitory != null and params.dormitory != ''">
+                and dormitory LIKE CONCAT('%',#{params.dormitory},'%')
+            </if>
+            <if test="params.remark != null and params.remark != ''">
+                and remark = #{params.remark}
+            </if>
+            <if test="params.operator != null and params.operator != ''">
+                and operator = #{params.operator}
+            </if>
+            <if test="params.sn != null and params.sn != ''">
+                and sn LIKE CONCAT('%',#{params.sn},'%')
+            </if>
+        </where>
+        order by updated_at desc
+    </select>
+    <select id="selectBasicInfo" resultType="java.util.Map">
+        select A.sn,
+               A.iccid,
+               C.simnum,
+               A.SWVersion  AS sWVersion,
+               A.area_id    AS areaID,
+               A.updated_at AS updatedAt,
+               B.province,
+               B.city,
+               B.school,
+               B.floor,
+               B.dormitory,
+               B.updated_at AS installTime,
+               A.lastpaytime,
+               D.logintime,
+               D.heartbeattime
+        from care_car A
+                 LEFT JOIN care_install B ON A.sn = B.sn
+                 LEFT JOIN care_card C ON A.iccid = C.ICCID
+                 LEFT JOIN Care_WasherHeartbeat D ON A.sn = D.simnum
+        where A.sn = #{sn}
+    </select>
+    <select id="selectSnList" resultType="java.lang.String">
+        select
+        sn
+        from care_install
+        <where>
+            sn in
+            <foreach collection="list" open="(" close=")" separator=","
+                     item="id" index="i">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+</mapper>

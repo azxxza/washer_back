@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareOutpowerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareOutpower">
+        <id column="id" property="id"/>
+        <result column="washerSN" property="washerSN"/>
+        <result column="instime" property="instime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, washerSN, instime
+    </sql>
+    <select id="selectOutPokerList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from care_outpower
+        <where>
+            <if test="params.washerSN != null">
+                and washerSN = #{params.washerSN}
+            </if>
+        </where>
+    </select>
+
+</mapper>

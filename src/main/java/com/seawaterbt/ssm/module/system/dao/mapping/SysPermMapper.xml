@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.system.dao.SysPermMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.system.entity.SysPerm">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="title" property="title"/>
+        <result column="is_menu" property="isMenu"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="icon" property="icon"/>
+        <result column="url" property="url"/>
+        <result column="num" property="num"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, title, is_menu, parent_id, icon, url, num
+    </sql>
+
+    <select id="selectPermList" resultType="java.util.Map">
+        select *
+        from t_sys_perm p
+        left join t_sys_role_perm rp on p.id = rp.perm_id
+        left join t_sys_user_role ur on rp.role_id = ur.role_id
+        <where>
+            <if test="isMenu != null">
+                and p.is_menu = #{isMenu}
+            </if>
+            <if test="userId != null">
+                and ur.user_id = #{userId}
+            </if>
+        </where>
+        order by p.num
+    </select>
+
+    <select id="selectAllPermList" resultType="java.util.Map">
+        select t1.*,
+        case when exists(select 1 from t_sys_perm t2 where t1.id = t2.parent_id) then '0' else '1' end as isLeaf
+        from t_sys_perm t1
+        <where>
+            <if test="title != null and title != ''">
+                and t1.title = #{title}
+            </if>
+        </where>
+    </select>
+    <select id="selectCascader" resultType="java.util.Map">
+        select t1.*,
+               case when exists(select 1 from t_sys_perm t2 where t1.id = t2.parent_id) then '0' else '1' end as isLeaf
+        from t_sys_perm t1
+        where is_menu = 1
+    </select>
+
+    <select id="selectPermByRoleId" resultType="java.lang.Integer">
+        select perm_id
+        from t_sys_role_perm
+        where role_id = #{roleId}
+    </select>
+
+    <delete id="deleteByRoleId">
+        delete
+        from t_sys_role_perm
+        where role_id = #{roleId}
+    </delete>
+
+    <select id="selectPermPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_perm
+        <where>
+            <if test="params.title != null and params.title != ''">
+                and title like '%${params.title}%'
+            </if>
+            <if test="params.id != null and params.id != ''">
+                and id = #{params.id}
+            </if>
+            <if test="params.isMenu != null">
+                and is_menu = #{params.isMenu}
+            </if>
+            <if test="params.parentId != null">
+                and parent_id = #{params.parentId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.system.dao.SysOperationLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.system.entity.SysOperationLog">
+        <id column="id" property="id"/>
+        <result column="log_name" property="logName"/>
+        <result column="user_id" property="userId"/>
+        <result column="username" property="username"/>
+        <result column="class_name" property="className"/>
+        <result column="method" property="method"/>
+        <result column="create_time" property="createTime"/>
+        <result column="message" property="message"/>
+        <result column="ip" property="ip"/>
+        <result column="gps" property="gps"/>
+        <result column="address" property="address"/>
+        <result column="result" property="result"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, log_name, user_id, username, class_name, method, create_time, message, ip, gps, address, result
+    </sql>
+
+    <select id="selectOperationLogList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_operation_log
+        <where>
+            <if test="params.username != null and params.username !=''">
+                and username = #{params.username}
+            </if>
+            <if test="params.startTime != null and params.startTime !=''">
+                and create_time >= #{params.startTime}
+            </if>
+            <if test="params.endTime !=null and params.endTime !=''">
+                and create_time &lt;= #{params.endTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+</mapper>

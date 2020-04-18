@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareIdleDeviceMapper">
+
+    <select id="selectIdleDeviceList" resultType="java.util.Map">
+        select *
+        from care_vw_idleterm
+        <where>
+            <if test="params.washerSN != null and params.washerSN != ''">
+                and sn = #{params.washerSN}
+            </if>
+            <if test="params.school != null and params.school != ''">
+                and school = #{params.school}
+            </if>
+            <if test="params.floor != null and params.floor != ''">
+                and floor = #{params.floor}
+            </if>
+            <if test="params.begTime != null and params.begTime != ''">
+                and enddate >= #{params.begTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and #{params.endTime} > enddate
+            </if>
+        </where>
+        order by endDate desc
+    </select>
+
+</mapper>

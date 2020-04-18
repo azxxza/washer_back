@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareOrderMapper">
+
+
+    <select id="selectCareOrderList" resultType="java.util.Map">
+        select simnum,
+        CreateTime as createTime,
+        OrderID,
+        optDesc,
+        responseType,
+        Description
+        from care_WasherOrderInfo
+        <where>
+            <if test="params.sn != null and params.sn != ''">
+                and simnum = #{params.sn}
+            </if>
+        </where>
+        order by CreateTime desc
+    </select>
+</mapper>

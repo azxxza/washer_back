@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareWasherlastprepayinfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareWasherlastprepayinfo">
+        <id column="ID" property="id" />
+        <result column="WeChat" property="WeChat" />
+        <result column="washerSN" property="washerSN" />
+        <result column="washerModel" property="washerModel" />
+        <result column="RenewMoney" property="RenewMoney" />
+        <result column="OrderCode" property="OrderCode" />
+        <result column="OrderStatus" property="OrderStatus" />
+        <result column="Opttime" property="Opttime" />
+        <result column="Deltime" property="Deltime" />
+        <result column="costtype" property="costtype" />
+        <result column="costid" property="costid" />
+        <result column="discount" property="discount" />
+        <result column="deposit" property="deposit" />
+        <result column="cost" property="cost" />
+        <result column="usertype" property="usertype" />
+        <result column="paytype" property="paytype" />
+        <result column="waterLevel" property="waterLevel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, WeChat, washerSN, washerModel, RenewMoney, OrderCode, OrderStatus, Opttime, Deltime, costtype, costid, discount, deposit, cost, usertype, paytype, waterLevel
+    </sql>
+
+</mapper>

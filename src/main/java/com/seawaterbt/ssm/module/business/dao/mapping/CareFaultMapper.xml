@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareFaultMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareFault">
+        <id column="id" property="id"/>
+        <result column="sn" property="sn"/>
+        <result column="fault" property="fault"/>
+        <result column="remark" property="remark"/>
+        <result column="connectphone" property="connectphone"/>
+        <result column="status" property="status"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, sn, fault, remark, connectphone, status, created_at, updated_at
+    </sql>
+    <select id="selectCareFaultList" resultType="java.util.Map">
+        select a.id,
+               a.sn,
+               b.typename   as faulttype,
+               a.remark,
+               a.connectphone,
+               a.created_at as createdAt,
+               c.floor,
+               c.school,
+               c.dormitory,
+               a.status
+        from care_fault A
+                 inner JOIN care_faulttype b on a.fault = b.id
+                 inner join care_install c on a.sn = c.sn
+    </select>
+
+</mapper>

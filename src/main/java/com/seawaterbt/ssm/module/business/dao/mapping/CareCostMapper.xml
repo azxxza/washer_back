@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareCostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareCost">
+        <id column="id" property="id"/>
+        <result column="costname" property="costname"/>
+        <result column="costtype" property="costtype"/>
+        <result column="costmodel" property="costmodel"/>
+        <result column="cost" property="cost"/>
+        <result column="discount" property="discount"/>
+        <result column="deposit" property="deposit"/>
+        <result column="naturalMon" property="naturalMon"/>
+        <result column="naturalMonDesc" property="naturalMonDesc"/>
+        <result column="remark" property="remark"/>
+        <result column="operator" property="operator"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="discountDesc" property="discountDesc"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                id, costname, costtype, costmodel, cost, discount, deposit, naturalMon, naturalMonDesc, remark,
+                operator, created_at, updated_at, discountDesc
+    </sql>
+    <select id="selectCareCostList" resultType="java.util.Map">
+        select
+        id,
+        costname,
+        cost,
+        discount,
+        deposit,
+        naturalMon ,
+        naturalMonDesc,
+        created_at as createdAt,
+        updated_at as updatedAt,
+        costtype,
+        costmodel,
+        costtypeName,
+        costmodelName,
+        operator,
+        discountDesc
+        from care_vw_costinfo
+        <where>
+            <if test="params.costname != null and params.costname != ''">
+                and costname LIKE CONCAT('%',#{params.costname},'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

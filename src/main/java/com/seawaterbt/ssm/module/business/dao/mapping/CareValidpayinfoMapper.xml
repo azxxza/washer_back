@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seawaterbt.ssm.module.business.dao.CareValidpayinfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seawaterbt.ssm.module.business.entity.CareValidpayinfo">
+        <result column="openid" property="openid"/>
+        <result column="washerSN" property="washerSN"/>
+        <result column="washerModel" property="washerModel"/>
+        <result column="RenewMoney" property="RenewMoney"/>
+        <result column="OrderCode" property="OrderCode"/>
+        <result column="Opttime" property="Opttime"/>
+        <result column="nickname" property="nickname"/>
+        <result column="school" property="school"/>
+        <result column="floor" property="floor"/>
+        <result column="dormitory" property="dormitory"/>
+        <result column="costtypeName" property="costtypeName"/>
+        <result column="deposit" property="deposit"/>
+        <result column="telephone" property="telephone"/>
+        <result column="paymodel" property="paymodel"/>
+        <result column="paytype" property="paytype"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+                openid, washerSN, washerModel, RenewMoney, OrderCode, Opttime, nickname, school, floor, dormitory,
+                costtypeName, deposit, telephone, paymodel, paytype
+    </sql>
+    <select id="selectValidPayInfo" resultType="java.util.Map">
+        select OrderCode,
+        Opttime
+        washerSN,washerModel,RenewMoney,
+        OrderStatus
+        from care_WasherPrePayInfo
+        <where>
+            <if test="params.washerSN != null">
+                and washerSN = #{params.washerSN}
+            </if>
+            <if test="params.openid != null and params.openid != ''">
+                and openid = #{params.openid}
+            </if>
+            <if test="params.begTime != null">
+                and Opttime >= #{params.begTime}
+            </if>
+            <if test="params.endTime != null">
+                and #{params.endTime} > Opttime
+            </if>
+            <if test="params.school != null and params.school != ''">
+                and school = #{params.school}
+            </if>
+            <if test="params.floor != null and params.floor != ''">
+                and floor = #{params.floor}
+            </if>
+            <if test="params.renewMoney != null and params.renewMoney != ''">
+                and RenewMoney = #{params.renewMoney}
+            </if>
+        </where>
+        order by Opttime desc
+    </select>
+
+</mapper>
